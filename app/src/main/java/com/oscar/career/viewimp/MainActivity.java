@@ -5,12 +5,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.timepicker.MaterialTimePicker;
@@ -24,6 +27,9 @@ public class MainActivity extends AppCompatActivity {
    RadioButton rd1,rd2,rd3;
    SharedPreferences sp;
    Spinner spinner;
+   ProgressBar progress;
+   Button sbtn;
+   int progressValue = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +46,23 @@ public class MainActivity extends AppCompatActivity {
         rd2 = findViewById(R.id.rd2);
         rd3 = findViewById(R.id.rd3);
         spinner = findViewById(R.id.spinner);
+        progress = findViewById(R.id.progress);
+        sbtn = findViewById(R.id.sbtn);
+
+        int lastSelcted = sp.getInt("key_11",0);
+        spinner.setSelection(lastSelcted);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                sp.edit().putInt("key_11",position).commit();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
 
         Calendar c = Calendar.getInstance();
@@ -106,7 +129,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
+        sbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(progressValue<=100){
+                    progressValue++;
+                    progress.setProgress(progressValue);
+                }
+            }
+        });
 
         datepicker.setOnClickListener(new View.OnClickListener() {
             @Override
